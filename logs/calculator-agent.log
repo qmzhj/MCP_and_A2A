@@ -1,99 +1,61 @@
-INFO:     Started server process [76791]
+INFO:     Started server process [116517]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
-INFO:     127.0.0.1:56870 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45044 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:48:34.474315+00:00 client -> calculator-agent 收到任务「计算3+5」
-[trace] 2026-10-12T08:48:34.539292+00:00 calculator-agent -> explainer 计算agent回复解释agent的tasks/send：计算 Agent 已接到任务，正在计算
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:48:34.557938+00:00 calculator-agent -> client 计算 Agent 开始进行计算
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:48:34.575289+00:00 calculator-agent -> client 计算 Agent 发现需要进行加法，准备调用计算工具
-[trace] 2026-10-12T08:48:34.587551+00:00 calculator-agent -> calculator-tool 向计算工具发送MCP请求：计算3+5
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:48:34.695145+00:00 calculator-agent -> client 计算 Agent 得到结果：3 加 5 等于 8
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:48:34.709456+00:00 calculator-agent -> client 这轮任务结束
-INFO:     127.0.0.1:45058 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:37182 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.240351+00:00 client -> calculator-agent 收到任务「计算3+5」
-[trace] 2026-10-12T08:53:49.264108+00:00 calculator-agent -> explainer 计算agent回复解释agent的tasks/send：计算 Agent 已接到任务，正在计算
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.283255+00:00 calculator-agent -> client 计算 Agent 开始进行计算
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.330926+00:00 calculator-agent -> client 计算 Agent 发现需要进行加法，准备调用计算工具
-[trace] 2026-10-12T08:53:49.348506+00:00 calculator-agent -> calculator-tool 向计算工具发送MCP请求：计算3+5
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.448331+00:00 calculator-agent -> client 计算 Agent 得到结果：3 加 5 等于 8
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.464698+00:00 calculator-agent -> client 这轮任务结束
-INFO:     127.0.0.1:58818 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.698405+00:00 client -> calculator-agent 收到任务「计算3+5」
-[trace] 2026-10-12T08:53:49.710704+00:00 calculator-agent -> explainer 计算agent回复解释agent的tasks/send：计算 Agent 已接到任务，正在计算
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.722510+00:00 calculator-agent -> client 计算 Agent 开始进行计算
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.735244+00:00 calculator-agent -> client 计算 Agent 发现需要进行加法，准备调用计算工具
-[trace] 2026-10-12T08:53:49.748486+00:00 calculator-agent -> calculator-tool 向计算工具发送MCP请求：计算3+5
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.821736+00:00 calculator-agent -> client 计算 Agent 得到结果：3 加 5 等于 8
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:53:49.834257+00:00 calculator-agent -> client 这轮任务结束
-INFO:     127.0.0.1:53610 - "POST / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53622 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53626 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:54:03.032520+00:00 client -> calculator-agent 收到任务「计算3+5」
-[trace] 2026-10-12T08:54:03.044963+00:00 calculator-agent -> explainer 计算agent回复解释agent的tasks/send：计算 Agent 已接到任务，正在计算
-INFO:     127.0.0.1:53626 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:54:03.059044+00:00 calculator-agent -> client 计算 Agent 开始进行计算
-INFO:     127.0.0.1:53626 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:54:03.076375+00:00 calculator-agent -> client 计算 Agent 发现需要进行加法，准备调用计算工具
-[trace] 2026-10-12T08:54:03.089001+00:00 calculator-agent -> calculator-tool 向计算工具发送MCP请求：计算3+5
-INFO:     127.0.0.1:53626 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:54:03.156488+00:00 calculator-agent -> client 计算 Agent 得到结果：3 加 5 等于 8
-INFO:     127.0.0.1:53626 - "POST / HTTP/1.1" 200 OK
-[trace] 2026-10-12T08:54:03.168722+00:00 calculator-agent -> client 这轮任务结束
-INFO:     127.0.0.1:53626 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45660 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33362 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:13:19.209154+00:00 client -> calculator-agent 收到任务「计算3+5」，创建记录任务状态的task对象
+[trace] 2026-10-12T14:13:19.263324+00:00 calculator-agent -> explainer 计算智能体返回任务的task对象，告知当前任务情况
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:13:19.279166+00:00 calculator-agent -> client 计算智能体开始进行计算
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:13:19.301426+00:00 calculator-agent -> client 计算智能体发现需要进行加法，准备调用计算工具
+[trace] 2026-10-12T14:13:19.320186+00:00 calculator-agent -> calculator-tool 向计算工具发送MCP请求：计算3+5
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:13:19.461669+00:00 calculator-agent -> client 计算智能体得到结果：3 加 5 等于 8，并更新task对象
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:13:19.482462+00:00 calculator-agent -> client 这轮任务结束
+INFO:     127.0.0.1:53448 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60762 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32840 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:14:48.367778+00:00 client -> calculator-agent 收到任务「计算3+5」，创建记录任务状态的task对象
+[trace] 2026-10-12T14:14:48.388015+00:00 calculator-agent -> explainer 计算智能体返回任务的task对象，告知当前任务情况
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:14:48.409456+00:00 calculator-agent -> client 计算智能体开始进行计算
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:14:48.447772+00:00 calculator-agent -> client 计算智能体发现需要进行加法，准备调用计算工具
+[trace] 2026-10-12T14:14:48.468983+00:00 calculator-agent -> calculator-tool 向计算工具发送MCP请求：计算3+5
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:14:48.559819+00:00 calculator-agent -> client 计算智能体得到结果：3 加 5 等于 8，并更新task对象
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
+[trace] 2026-10-12T14:14:48.572525+00:00 calculator-agent -> client 这轮任务结束
+INFO:     127.0.0.1:32840 - "POST / HTTP/1.1" 200 OK
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [76791]
+INFO:     Finished server process [116517]

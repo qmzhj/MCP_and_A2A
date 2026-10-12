@@ -135,9 +135,9 @@ def install_a2a(app: FastAPI, card: dict[str, Any], service: TaskService) -> Non
             text = message_text(params)
             task = service.create(params.get("id"))
             if service.agent_id == "explainer":
-                summary = f"用户把题目「{text}」交给解释 Agent" if text else "用户发来一个任务"
+                summary = f"用户把题目「{text}」交给理解智能体" if text else "用户发来一个任务"
             elif service.agent_id == "calculator-agent":
-                summary = f"收到任务「{text}」" if text else "收到一道计算题"
+                summary = f"收到任务「{text}」，创建记录任务状态的task对象" if text else "收到一道计算题"
             else:
                 summary = f"收到题目「{text}」" if text else method
             await record("client", service.agent_id, method, {"summary": summary, "taskId": task.id})
@@ -148,7 +148,7 @@ def install_a2a(app: FastAPI, card: dict[str, Any], service: TaskService) -> Non
                         "calculator-agent",
                         "explainer",
                         "tasks/send",
-                        {"summary": "计算agent回复解释agent的tasks/send：计算 Agent 已接到任务，正在计算", "taskId": task.id},
+                        {"summary": "计算智能体返回任务的task对象，告知当前任务情况", "taskId": task.id},
                     )
                 return JSONResponse({"jsonrpc": "2.0", "id": request_id, "result": task.public()})
             return StreamingResponse(

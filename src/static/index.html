@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>解释 Agent 经“技能广场”委托计算 Agent</title>
+  <title>理解智能体经“技能广场”委托计算智能体</title>
   <style>
     :root {
       color-scheme: light;
@@ -18,24 +18,31 @@
     body {
       margin: 0;
       font-family: "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+      font-size: 18px;
       color: var(--ink);
       background: var(--paper);
     }
     header {
       padding: 28px 32px 8px;
     }
-    h1 { margin: 0 0 8px; font-size: 28px; font-weight: 650; }
-    header p { margin: 0; color: var(--muted); max-width: 760px; }
+    h1 { margin: 0 0 8px; font-size: 34px; font-weight: 650; }
+    header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: none;
+      white-space: nowrap;
+      font-size: 18px;
+    }
     .stage {
       position: relative;
       display: grid;
-      grid-template-columns: 240px minmax(220px, 1fr) 240px;
+      grid-template-columns: 300px minmax(240px, 1fr) 300px;
       grid-template-rows: auto auto;
       justify-items: center;
       align-items: center;
-      column-gap: 36px;
-      row-gap: 72px;
-      margin: 16px 48px 8px;
+      column-gap: 56px;
+      row-gap: 96px;
+      margin: 16px 36px 8px;
     }
     svg.links {
       position: absolute;
@@ -51,21 +58,64 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 240px;
+      max-width: 300px;
       background: var(--card);
       border: 1px solid var(--line);
       border-top: 4px solid var(--accent, var(--ink));
-      border-radius: 14px;
-      padding: 12px 12px 10px;
+      border-radius: 18px;
+      padding: 14px 14px 12px;
     }
     .node.active { border-color: var(--active); box-shadow: 0 0 0 3px rgba(196, 85, 0, 0.16); }
-    #node-plaza { grid-column: 2; grid-row: 1; --accent: #8a6a22; }
-    #node-calculator-tool { grid-column: 3; grid-row: 1; --accent: #8a4b08; }
+    #node-plaza {
+      grid-column: 2;
+      grid-row: 1;
+      --accent: #8a6a22;
+      border-radius: 2px;
+      border: 2px solid #8a6a22;
+      box-shadow: 9px 9px 0 #efe4cc, 9px 9px 0 1px #c4b8a4;
+    }
+    #node-plaza::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-style: solid;
+      border-width: 0 18px 18px 0;
+      border-color: #efe6d4 #f6f1e8;
+    }
+    #node-plaza.active {
+      border-color: var(--active);
+      box-shadow: 0 0 0 3px rgba(196, 85, 0, 0.16), 9px 9px 0 #efe4cc;
+    }
+    #node-calculator-tool {
+      grid-column: 3;
+      grid-row: 1;
+      --accent: #8a4b08;
+      border: none;
+      border-radius: 0;
+      padding: 18px 36px 16px;
+      clip-path: polygon(15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%, 0 50%);
+      filter:
+        drop-shadow(1px 0 0 #8a4b08)
+        drop-shadow(-1px 0 0 #8a4b08)
+        drop-shadow(0 1px 0 #8a4b08)
+        drop-shadow(0 -1px 0 #8a4b08);
+    }
+    #node-calculator-tool.active {
+      border-color: transparent;
+      box-shadow: none;
+      filter:
+        drop-shadow(0 0 1px #c45500)
+        drop-shadow(1px 0 0 #c45500)
+        drop-shadow(-1px 0 0 #c45500)
+        drop-shadow(0 1px 0 #c45500)
+        drop-shadow(0 -1px 0 #c45500);
+    }
     #node-explainer { grid-column: 1; grid-row: 2; --accent: #1f4b6e; }
     #node-calculator-agent { grid-column: 3; grid-row: 2; --accent: #0f6b4c; }
-    .node h2 { margin: 0; font-size: 18px; }
-    .meta { margin: 4px 0 10px; color: var(--muted); font-size: 13px; }
-    label { display: block; font-size: 13px; margin-bottom: 6px; }
+    .node h2 { margin: 0; font-size: 22px; }
+    .meta { margin: 4px 0 10px; color: var(--muted); font-size: 16px; }
+    label { display: block; font-size: 16px; margin-bottom: 6px; }
     textarea {
       width: 100%;
       min-height: 48px;
@@ -89,14 +139,14 @@
     button:disabled { opacity: 0.55; cursor: wait; }
     button.secondary { background: #8a4b08; margin-left: 8px; }
     #next-hint { min-height: 1.4em; }
-    .status, .result, .pulse { margin: 8px 0 0; font-size: 14px; line-height: 1.45; }
+    .status, .result, .pulse { margin: 8px 0 0; font-size: 17px; line-height: 1.45; }
     .result { font-weight: 650; }
     .card-list { display: flex; flex-direction: column; gap: 8px; }
     .card {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 8px;
-      font-size: 13px;
+      font-size: 16px;
       background: #fff;
     }
     .card strong { display: block; }
@@ -109,8 +159,8 @@
       color: white;
       border-radius: 12px;
       padding: 6px 10px;
-      font-size: 13px;
-      line-height: 1.4;
+      font-size: 16px;
+      line-height: 1.45;
       text-align: center;
       pointer-events: none;
     }
@@ -118,41 +168,46 @@
       display: block;
       margin-top: 4px;
       color: #8ec5ff;
-      font-size: 12px;
+      font-size: 15px;
     }
     .annotation {
       position: absolute;
       z-index: 2;
-      width: 260px;
+      width: 320px;
       background: #f4f8ff;
       color: #1d4e89;
       border: 1px dashed #7eb0e8;
       border-radius: 10px;
       padding: 8px 10px;
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 16px;
+      line-height: 1.55;
       pointer-events: none;
     }
     .annotation.resident {
       position: relative;
       width: auto;
-      max-width: 240px;
+      max-width: 300px;
       justify-self: center;
       align-self: center;
     }
     #annotation-plaza { grid-column: 1; grid-row: 1; }
     section.log { margin: 0 32px 32px; }
-    section.log h2 { font-size: 16px; margin-bottom: 8px; }
+    section.log h2 { font-size: 22px; margin-bottom: 8px; }
     .log-pane {
-      max-height: 240px;
-      overflow-y: auto;
+      overflow: visible;
       border: 1px solid var(--line);
       border-radius: 10px;
       background: var(--card);
-      padding: 8px 12px 8px 4px;
+      padding: 10px 16px 10px 8px;
     }
-    ol { margin: 0; padding-left: 22px; }
-    li { margin: 4px 0; font-family: ui-monospace, "Cascadia Code", monospace; font-size: 13px; }
+    ol { margin: 0; padding-left: 28px; }
+    li {
+      margin: 6px 0;
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 16px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
     li .log-note { color: #1d4e89; }
     @media (max-width: 900px) {
       .stage { grid-template-columns: 1fr; row-gap: 72px; }
@@ -166,8 +221,8 @@
 </head>
 <body>
   <header>
-    <h1>解释 Agent 经“技能广场”委托计算 Agent</h1>
-    <p>“技能广场”是每个 Agent 公布技能的约定位置 <code>/.well-known/agent.json</code>。提交后，页面向解释 Agent 发送 <code>tasks/sendSubscribe</code>。每点一次「下一步」，才展示下一条通信。</p>
+    <h1>理解智能体经“技能广场”委托计算智能体</h1>
+    <p>“技能广场”是每个 Agent 公布技能的约定位置 <code>/.well-known/agent.json</code>。提交后，页面向理解智能体发送 <code>tasks/sendSubscribe</code>。每点一次「下一步」，才展示下一条通信。</p>
   </header>
   <div class="stage" id="stage">
     <svg class="links" id="links" aria-hidden="true">
@@ -184,10 +239,10 @@
       <line id="edge-annotation-plaza" stroke="#7eb0e8" stroke-width="1.5" stroke-dasharray="4 3"></line>
     </svg>
     <article class="node" id="node-explainer" data-id="explainer">
-      <h2>解释 Agent</h2>
+      <h2>理解智能体</h2>
       <p class="meta">8002 · 技能 explain-task</p>
       <form id="task-form">
-        <label for="task-text">交给解释 Agent 的任务</label>
+        <label for="task-text">交给理解智能体的任务</label>
         <textarea id="task-text">计算3+5</textarea>
         <button type="submit" id="send">发送任务</button>
         <button type="button" class="secondary" id="next" disabled>下一步</button>
@@ -205,7 +260,7 @@
       </div>
     </article>
     <article class="node" id="node-calculator-agent" data-id="calculator-agent">
-      <h2>计算 Agent</h2>
+      <h2>计算智能体</h2>
       <p class="meta">8001 · 技能 math-calculator</p>
       <p class="pulse" id="pulse-calculator-agent">空闲</p>
     </article>
@@ -254,11 +309,38 @@
         width: rect.width,
         height: rect.height,
         cx: left + rect.width / 2,
-        cy: top + rect.height / 2
+        cy: top + rect.height / 2,
+        shape: id === "calculator-tool" ? "hex" : "rect"
       };
     }
 
+    function hexBorderPoint(rect, toward) {
+      const dx = toward.cx - rect.cx;
+      const dy = toward.cy - rect.cy;
+      if (dx === 0 && dy === 0) return { x: rect.cx, y: rect.cy };
+      const verts = [[0.15, 0], [0.85, 0], [1, 0.5], [0.85, 1], [0.15, 1], [0, 0.5]]
+        .map(([x, y]) => ({ x: rect.left + x * rect.width, y: rect.top + y * rect.height }));
+      let best = null;
+      for (let i = 0; i < verts.length; i += 1) {
+        const a = verts[i];
+        const b = verts[(i + 1) % verts.length];
+        const vx = b.x - a.x;
+        const vy = b.y - a.y;
+        const denom = dx * vy - dy * vx;
+        if (Math.abs(denom) < 1e-8) continue;
+        const ax = a.x - rect.cx;
+        const ay = a.y - rect.cy;
+        const t = (ax * vy - ay * vx) / denom;
+        const u = (ax * dy - ay * dx) / denom;
+        if (t > 0 && u >= 0 && u <= 1 && (!best || t < best.t)) {
+          best = { x: rect.cx + dx * t, y: rect.cy + dy * t, t };
+        }
+      }
+      return best || { x: rect.cx, y: rect.cy };
+    }
+
     function borderPoint(rect, toward) {
+      if (rect.shape === "hex") return hexBorderPoint(rect, toward);
       const dx = toward.cx - rect.cx;
       const dy = toward.cy - rect.cy;
       if (dx === 0 && dy === 0) return { x: rect.cx, y: rect.cy };
@@ -307,7 +389,7 @@
         line.dataset.labelW = Math.max(168, Math.min(460, span - 28));
       });
       if (shownHops.length) {
-        shownHops.forEach((item) => placeEdgeHop(item.el, item.edge, item.text));
+        shownHops.forEach((item) => placeShownHop(item));
       } else if (!hop.hidden) {
         placeHop(hopText);
       }
@@ -438,18 +520,61 @@
       line.setAttribute("y2", plaza.cy);
     }
 
-    function isMcpSend(event) {
-      return summaryOf(event).startsWith("向计算工具发送MCP请求");
+    function placeShownHop(item) {
+      if (item.kind === "node") {
+        const box = nodeRect(item.id);
+        item.el.hidden = false;
+        item.el.replaceChildren(document.createTextNode(item.text));
+        item.el.style.left = `${box.cx}px`;
+        item.el.style.top = `${box.top - 8}px`;
+        item.el.style.transform = "translate(-50%, -100%)";
+        item.el.style.maxWidth = "360px";
+        return;
+      }
+      placeEdgeHop(item.el, item.edge, item.text);
     }
 
-    function isViewProgress(event) {
-      return summaryOf(event) === "回复A2A请求：正在计算";
+    const simultaneousSteps = [
+      {
+        left: (event) => summaryOf(event).startsWith("计算智能体开始进行计算"),
+        right: (event) => summaryOf(event) === "A2A GET请求：询问计算进度"
+      },
+      {
+        left: (event) => summaryOf(event).startsWith("计算智能体发现需要进行加法"),
+        right: (event) => summaryOf(event) === "回复A2A请求：返回task对象，表示正在计算"
+      },
+      {
+        left: (event) => summaryOf(event).startsWith("向计算工具发送MCP请求"),
+        right: (event) => summaryOf(event) === "A2A GET请求：询问计算进度"
+      },
+      {
+        left: (event) => summaryOf(event).startsWith("计算工具收到："),
+        right: (event) => summaryOf(event) === "回复A2A请求：返回task对象，表示正在计算"
+      }
+    ];
+
+    function isProgressQuery(event) {
+      return summaryOf(event) === "A2A GET请求：询问计算进度";
+    }
+
+    function keepsFinalProgressQuery(event) {
+      if (!isProgressQuery(event)) return false;
+      const later = pending.slice(pending.indexOf(event) + 1);
+      const completionFollows = later.some((item) => summaryOf(item).startsWith("计算智能体回复A2A GET请求：计算完成"));
+      if (!completionFollows) return false;
+      return !later.some(isProgressQuery);
     }
 
     function pairedPartner(event) {
-      const match = isMcpSend(event) ? isViewProgress : isViewProgress(event) ? isMcpSend : null;
-      if (!match) return null;
-      return pending.find((item) => item !== event && match(item)) || null;
+      for (const rule of simultaneousSteps) {
+        const onLeft = rule.left(event);
+        const onRight = rule.right(event);
+        if (!onLeft && !onRight) continue;
+        const match = onLeft ? rule.right : rule.left;
+        const found = pending.find((item) => item !== event && match(item) && !keepsFinalProgressQuery(item));
+        if (found) return found;
+      }
+      return null;
     }
 
     function logEvent(event) {
@@ -508,21 +633,25 @@
       hideHop(hopB);
       shownHops = [];
       [first, second].forEach((event, index) => {
-        const line = edgeElement(event.source, event.target);
-        if (!line) return;
-        [event.source, event.target].forEach((id) => {
+        const el = index === 0 ? hop : hopB;
+        const text = logged[index].text;
+        const ids = event.source === "client" || event.target === "client"
+          ? [event.source === "client" ? event.target : event.source]
+          : [event.source, event.target];
+        ids.forEach((id) => {
           const node = document.querySelector(`[data-id="${id}"]`);
           if (node) node.classList.add("active");
         });
+        if (event.source === "client" || event.target === "client") {
+          shownHops.push({ el, kind: "node", id: ids[0], text });
+          return;
+        }
+        const line = edgeElement(event.source, event.target);
+        if (!line) return;
         line.classList.add("active");
         line.dataset.arrowFrom = event.source;
         line.dataset.arrowTo = event.target;
-        shownHops.push({
-          el: index === 0 ? hop : hopB,
-          edge: line,
-          text: logged[index].text,
-          note: logged[index].note
-        });
+        shownHops.push({ el, kind: "edge", edge: line, text });
       });
       showAgentNote(logged.map((item) => item.note).find(Boolean) || "");
       drawLinks();
@@ -560,8 +689,8 @@
         try {
           const body = await (await fetch(`${agent.url}/.well-known/agent.json`)).json();
           const labels = {
-            explainer: { name: "解释agent", skill: "理解任务" },
-            "calculator-agent": { name: "计算agent", skill: "计算" }
+            explainer: { name: "理解智能体", skill: "理解任务" },
+            "calculator-agent": { name: "计算智能体", skill: "计算" }
           };
           const label = labels[agent.id] || { name: body.name, skill: (body.skills || []).map((skill) => skill.id).join(", ") || "无" };
           card.innerHTML = `<strong>${label.name}</strong><br>技能：${label.skill}`;
@@ -576,10 +705,14 @@
     function isExplainerReceipt(event) {
       return event.source === "explainer"
         && event.target === "client"
-        && summaryOf(event).startsWith("解释 Agent 收到题目");
+        && summaryOf(event).startsWith("理解智能体收到题目");
     }
 
     function skipQueuedEvent(event) {
+      if (summaryOf(event) === "这轮任务结束") {
+        updateBoxStatus(event);
+        return true;
+      }
       const handedToExplainer = event.source === "client"
         && event.target === "explainer"
         && (event.action === "tasks/send" || event.action === "tasks/sendSubscribe");
@@ -648,7 +781,7 @@
       const text = document.getElementById("task-text").value.trim();
       armed = true;
       resetDemo();
-      const receipt = `解释 Agent 收到题目：${text}`;
+      const receipt = `理解智能体收到题目：${text}`;
       applyEvent({
         source: "explainer",
         target: "client",

@@ -1079,3 +1079,75 @@
 {"ts": "2026-10-12T08:54:03.190132+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "计算agent回复A2A GET请求：计算完成，结果为8", "state": "completed"}}
 {"ts": "2026-10-12T08:54:03.202666+00:00", "source": "explainer", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算 Agent 得到结果：3 加 5 等于 8", "taskId": "20a72f06-e4a2-4cbc-a0a3-e90c28fd294a"}}
 {"ts": "2026-10-12T08:54:03.214731+00:00", "source": "explainer", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "20a72f06-e4a2-4cbc-a0a3-e90c28fd294a"}}
+{"ts": "2026-10-12T14:03:33.517009+00:00", "source": "client", "target": "explainer", "action": "tasks/sendSubscribe", "detail": {"summary": "用户把题目「计算3+5」交给解释 Agent", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:03:33.623244+00:00", "source": "explainer", "target": "client", "action": "submitted", "detail": {"summary": "解释 Agent 收到题目：计算3+5", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:03:33.637655+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "解释 Agent 发现需要进行计算", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:03:33.650864+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "解释 Agent 发现自己没有计算技能", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:03:33.669279+00:00", "source": "explainer", "target": "plaza", "action": "查看广场", "detail": {"path": "/.well-known/agent.json", "summary": "A2A 能力发现：向约定好的 well-known地址（“技能广场”）发送HTTP GET请求，获取agent技能卡片"}}
+{"ts": "2026-10-12T14:03:33.700994+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "发现计算 Agent 具有计算技能", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:03:33.714987+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/send", "detail": {"summary": "A2A 的任务委托：通过 tasks/send 把计算任务交给计算 Agent"}}
+{"ts": "2026-10-12T14:03:33.733727+00:00", "source": "client", "target": "calculator-agent", "action": "tasks/send", "detail": {"summary": "收到任务「计算3+5」，创建记录任务状态的task对象", "taskId": "d91e5973-c92e-47d1-be78-9e03279d361a"}}
+{"ts": "2026-10-12T14:03:33.793588+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/send", "detail": {"summary": "计算agent返回任务的task对象，告知当前任务情况", "taskId": "d91e5973-c92e-47d1-be78-9e03279d361a"}}
+{"ts": "2026-10-12T14:03:33.812589+00:00", "source": "calculator-agent", "target": "client", "action": "submitted", "detail": {"summary": "计算 Agent 开始进行计算", "taskId": "d91e5973-c92e-47d1-be78-9e03279d361a"}}
+{"ts": "2026-10-12T14:03:33.833773+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:03:33.837047+00:00", "source": "calculator-agent", "target": "client", "action": "working", "detail": {"summary": "计算 Agent 发现需要进行加法，准备调用计算工具", "taskId": "d91e5973-c92e-47d1-be78-9e03279d361a", "note": "在 MCP 中，连接建立后会进入初始化阶段，计算 Agent 会调用 tools/list 取回工具清单，从而知道自己有哪些工具可以调用。"}}
+{"ts": "2026-10-12T14:03:33.854927+00:00", "source": "calculator-agent", "target": "calculator-tool", "action": "tools/call", "detail": {"summary": "向计算工具发送MCP请求：计算3+5"}}
+{"ts": "2026-10-12T14:03:33.864159+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "回复A2A请求：返回task对象，表示正在计算", "state": "submitted"}}
+{"ts": "2026-10-12T14:03:33.888633+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:03:33.892772+00:00", "source": "calculator-tool", "target": "client", "action": "tools/call", "detail": {"summary": "计算工具收到：把 3 和 5 相加"}}
+{"ts": "2026-10-12T14:03:33.902995+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "回复A2A请求：返回task对象，表示正在计算", "state": "working"}}
+{"ts": "2026-10-12T14:03:33.963166+00:00", "source": "calculator-tool", "target": "calculator-agent", "action": "tools/call", "detail": {"summary": "计算工具答：3 加 5 等于 8"}}
+{"ts": "2026-10-12T14:03:33.986042+00:00", "source": "calculator-agent", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算 Agent 得到结果：3 加 5 等于 8，并更新task对象", "taskId": "d91e5973-c92e-47d1-be78-9e03279d361a"}}
+{"ts": "2026-10-12T14:03:34.004171+00:00", "source": "calculator-agent", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "d91e5973-c92e-47d1-be78-9e03279d361a"}}
+{"ts": "2026-10-12T14:03:34.018917+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:03:34.033135+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "计算agent回复A2A GET请求：计算完成，结果为8", "state": "completed"}}
+{"ts": "2026-10-12T14:03:34.048553+00:00", "source": "explainer", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算 Agent 得到结果：3 加 5 等于 8", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:03:34.071882+00:00", "source": "explainer", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "42fe9e60-1109-457e-85c9-f11a3a2c9294"}}
+{"ts": "2026-10-12T14:13:19.034601+00:00", "source": "client", "target": "explainer", "action": "tasks/sendSubscribe", "detail": {"summary": "用户把题目「计算3+5」交给理解智能体", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:13:19.098604+00:00", "source": "explainer", "target": "client", "action": "submitted", "detail": {"summary": "理解智能体收到题目：计算3+5", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:13:19.118832+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "理解智能体发现需要进行计算", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:13:19.131393+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "理解智能体发现自己没有计算技能", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:13:19.147992+00:00", "source": "explainer", "target": "plaza", "action": "查看广场", "detail": {"path": "/.well-known/agent.json", "summary": "A2A 能力发现：向约定好的 well-known地址（“技能广场”）发送HTTP GET请求，获取agent技能卡片"}}
+{"ts": "2026-10-12T14:13:19.177214+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "发现计算智能体具有计算技能", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:13:19.190868+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/send", "detail": {"summary": "A2A 的任务委托：通过 tasks/send 把计算任务交给计算智能体"}}
+{"ts": "2026-10-12T14:13:19.209154+00:00", "source": "client", "target": "calculator-agent", "action": "tasks/send", "detail": {"summary": "收到任务「计算3+5」，创建记录任务状态的task对象", "taskId": "3b434113-8b42-47d6-9fe9-a90d746b0ae0"}}
+{"ts": "2026-10-12T14:13:19.263324+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/send", "detail": {"summary": "计算智能体返回任务的task对象，告知当前任务情况", "taskId": "3b434113-8b42-47d6-9fe9-a90d746b0ae0"}}
+{"ts": "2026-10-12T14:13:19.279166+00:00", "source": "calculator-agent", "target": "client", "action": "submitted", "detail": {"summary": "计算智能体开始进行计算", "taskId": "3b434113-8b42-47d6-9fe9-a90d746b0ae0"}}
+{"ts": "2026-10-12T14:13:19.298557+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:13:19.301426+00:00", "source": "calculator-agent", "target": "client", "action": "working", "detail": {"summary": "计算智能体发现需要进行加法，准备调用计算工具", "taskId": "3b434113-8b42-47d6-9fe9-a90d746b0ae0", "note": "在 MCP 中，连接建立后会进入初始化阶段，计算智能体会调用 tools/list 取回工具清单，从而知道自己有哪些工具可以调用。"}}
+{"ts": "2026-10-12T14:13:19.320186+00:00", "source": "calculator-agent", "target": "calculator-tool", "action": "tools/call", "detail": {"summary": "向计算工具发送MCP请求：计算3+5"}}
+{"ts": "2026-10-12T14:13:19.329403+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "回复A2A请求：返回task对象，表示正在计算", "state": "submitted"}}
+{"ts": "2026-10-12T14:13:19.358886+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:13:19.361961+00:00", "source": "calculator-tool", "target": "client", "action": "tools/call", "detail": {"summary": "计算工具收到：把 3 和 5 相加"}}
+{"ts": "2026-10-12T14:13:19.375595+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "回复A2A请求：返回task对象，表示正在计算", "state": "working"}}
+{"ts": "2026-10-12T14:13:19.438801+00:00", "source": "calculator-tool", "target": "calculator-agent", "action": "tools/call", "detail": {"summary": "计算工具答：3 加 5 等于 8"}}
+{"ts": "2026-10-12T14:13:19.461669+00:00", "source": "calculator-agent", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算智能体得到结果：3 加 5 等于 8，并更新task对象", "taskId": "3b434113-8b42-47d6-9fe9-a90d746b0ae0"}}
+{"ts": "2026-10-12T14:13:19.482462+00:00", "source": "calculator-agent", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "3b434113-8b42-47d6-9fe9-a90d746b0ae0"}}
+{"ts": "2026-10-12T14:13:19.498041+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:13:19.514187+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "计算智能体回复A2A GET请求：计算完成，结果为8", "state": "completed"}}
+{"ts": "2026-10-12T14:13:19.529741+00:00", "source": "explainer", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算智能体得到结果：3 加 5 等于 8", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:13:19.545450+00:00", "source": "explainer", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "fe42487e-be66-4c6f-9bf0-266cde0a7f6f"}}
+{"ts": "2026-10-12T14:14:48.201301+00:00", "source": "client", "target": "explainer", "action": "tasks/sendSubscribe", "detail": {"summary": "用户把题目「计算3+5」交给理解智能体", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}
+{"ts": "2026-10-12T14:14:48.230204+00:00", "source": "explainer", "target": "client", "action": "submitted", "detail": {"summary": "理解智能体收到题目：计算3+5", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}
+{"ts": "2026-10-12T14:14:48.259132+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "理解智能体发现需要进行计算", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}
+{"ts": "2026-10-12T14:14:48.279260+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "理解智能体发现自己没有计算技能", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}
+{"ts": "2026-10-12T14:14:48.292829+00:00", "source": "explainer", "target": "plaza", "action": "查看广场", "detail": {"path": "/.well-known/agent.json", "summary": "A2A 能力发现：向约定好的 well-known地址（“技能广场”）发送HTTP GET请求，获取agent技能卡片"}}
+{"ts": "2026-10-12T14:14:48.326729+00:00", "source": "explainer", "target": "client", "action": "working", "detail": {"summary": "发现计算智能体具有计算技能", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}
+{"ts": "2026-10-12T14:14:48.345448+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/send", "detail": {"summary": "A2A 的任务委托：通过 tasks/send 把计算任务交给计算智能体"}}
+{"ts": "2026-10-12T14:14:48.367778+00:00", "source": "client", "target": "calculator-agent", "action": "tasks/send", "detail": {"summary": "收到任务「计算3+5」，创建记录任务状态的task对象", "taskId": "9d82c594-f349-4f64-98b3-02170c6d2e52"}}
+{"ts": "2026-10-12T14:14:48.388015+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/send", "detail": {"summary": "计算智能体返回任务的task对象，告知当前任务情况", "taskId": "9d82c594-f349-4f64-98b3-02170c6d2e52"}}
+{"ts": "2026-10-12T14:14:48.409456+00:00", "source": "calculator-agent", "target": "client", "action": "submitted", "detail": {"summary": "计算智能体开始进行计算", "taskId": "9d82c594-f349-4f64-98b3-02170c6d2e52"}}
+{"ts": "2026-10-12T14:14:48.444796+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:14:48.447772+00:00", "source": "calculator-agent", "target": "client", "action": "working", "detail": {"summary": "计算智能体发现需要进行加法，准备调用计算工具", "taskId": "9d82c594-f349-4f64-98b3-02170c6d2e52", "note": "在 MCP 中，连接建立后会进入初始化阶段，计算智能体会调用 tools/list 取回工具清单，从而知道自己有哪些工具可以调用。"}}
+{"ts": "2026-10-12T14:14:48.464529+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "回复A2A请求：返回task对象，表示正在计算", "state": "submitted"}}
+{"ts": "2026-10-12T14:14:48.468983+00:00", "source": "calculator-agent", "target": "calculator-tool", "action": "tools/call", "detail": {"summary": "向计算工具发送MCP请求：计算3+5"}}
+{"ts": "2026-10-12T14:14:48.495937+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:14:48.499645+00:00", "source": "calculator-tool", "target": "client", "action": "tools/call", "detail": {"summary": "计算工具收到：把 3 和 5 相加"}}
+{"ts": "2026-10-12T14:14:48.530100+00:00", "source": "calculator-tool", "target": "calculator-agent", "action": "tools/call", "detail": {"summary": "计算工具答：3 加 5 等于 8"}}
+{"ts": "2026-10-12T14:14:48.533107+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "回复A2A请求：返回task对象，表示正在计算", "state": "working"}}
+{"ts": "2026-10-12T14:14:48.559819+00:00", "source": "calculator-agent", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算智能体得到结果：3 加 5 等于 8，并更新task对象", "taskId": "9d82c594-f349-4f64-98b3-02170c6d2e52"}}
+{"ts": "2026-10-12T14:14:48.572525+00:00", "source": "calculator-agent", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "9d82c594-f349-4f64-98b3-02170c6d2e52"}}
+{"ts": "2026-10-12T14:14:48.584758+00:00", "source": "explainer", "target": "calculator-agent", "action": "tasks/get", "detail": {"summary": "A2A GET请求：询问计算进度"}}
+{"ts": "2026-10-12T14:14:48.600402+00:00", "source": "calculator-agent", "target": "explainer", "action": "tasks/get", "detail": {"summary": "计算智能体回复A2A GET请求：计算完成，结果为8", "state": "completed"}}
+{"ts": "2026-10-12T14:14:48.612222+00:00", "source": "explainer", "target": "client", "action": "TaskArtifactUpdateEvent", "detail": {"summary": "计算智能体得到结果：3 加 5 等于 8", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}
+{"ts": "2026-10-12T14:14:48.625002+00:00", "source": "explainer", "target": "client", "action": "completed", "detail": {"summary": "这轮任务结束", "taskId": "bdc42f52-22d4-481e-a201-7317e822234c"}}

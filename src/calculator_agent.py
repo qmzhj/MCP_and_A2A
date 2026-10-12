@@ -89,7 +89,7 @@ async def announce(task: Task, state: str, message: str | None = None, final: bo
 
 
 async def run_calculation(task: Task, text: str) -> None:
-    await announce(task, "submitted", "计算 Agent 开始进行计算")
+    await announce(task, "submitted", "计算智能体开始进行计算")
     numbers = extract_numbers(text)
     if len(numbers) < 2:
         await task.emit_artifact("请提供两个数字，例如：计算3加5。支持加法、乘法和幂运算。")
@@ -102,7 +102,7 @@ async def run_calculation(task: Task, text: str) -> None:
         return
     operation, symbol, arguments = chosen
     work = {
-        "add": "计算 Agent 发现需要进行加法，准备调用计算工具",
+        "add": "计算智能体发现需要进行加法，准备调用计算工具",
         "multiply": "请计算工具做乘法",
         "power": "请计算工具做乘方",
     }
@@ -110,7 +110,7 @@ async def run_calculation(task: Task, text: str) -> None:
         task,
         "working",
         work[operation],
-        note="在 MCP 中，连接建立后会进入初始化阶段，计算 Agent 会调用 tools/list 取回工具清单，从而知道自己有哪些工具可以调用。" if operation == "add" else None,
+        note="在 MCP 中，连接建立后会进入初始化阶段，计算智能体会调用 tools/list 取回工具清单，从而知道自己有哪些工具可以调用。" if operation == "add" else None,
     )
     await pause()
     await record("calculator-agent", "calculator-tool", "tools/call", {"summary": f"向计算工具发送MCP请求：{text}"})
@@ -123,7 +123,7 @@ async def run_calculation(task: Task, text: str) -> None:
         "calculator-agent",
         "client",
         "TaskArtifactUpdateEvent",
-        {"summary": f"计算 Agent 得到结果：{spoken_math(left, symbol, right, result)}", "taskId": task.id},
+        {"summary": f"计算智能体得到结果：{spoken_math(left, symbol, right, result)}，并更新task对象", "taskId": task.id},
     )
     await announce(task, "completed", "这轮任务结束", final=True)
 

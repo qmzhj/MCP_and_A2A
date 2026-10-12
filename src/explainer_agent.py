@@ -129,16 +129,16 @@ async def get_task(client: httpx.AsyncClient, url: str, task_id: str) -> dict[st
 
 
 async def run_explanation(task: Task, text: str) -> None:
-    await announce(task, "submitted", f"解释 Agent 收到题目：{text}")
+    await announce(task, "submitted", f"理解智能体收到题目：{text}")
     if not needs_calculation(text):
         await task.fail("这道题用不到计算。")
         await record("explainer", "client", "failed", {"summary": "这道题用不到计算。"})
         return
-    await announce(task, "working", "解释 Agent 发现需要进行计算")
+    await announce(task, "working", "理解智能体发现需要进行计算")
     if REQUIRED_SKILL in skill_ids(AGENT_CARD):
-        await task.fail("解释 Agent 不应该自己公布计算技能。")
+        await task.fail("理解智能体不应该自己公布计算技能。")
         return
-    await announce(task, "working", "解释 Agent 发现自己没有计算技能")
+    await announce(task, "working", "理解智能体发现自己没有计算技能")
     await record("explainer", "plaza", "查看广场", {
         "path": "/.well-known/agent.json",
         "summary": "A2A 能力发现：向约定好的 well-known地址（“技能广场”）发送HTTP GET请求，获取agent技能卡片",
@@ -153,7 +153,7 @@ async def run_explanation(task: Task, text: str) -> None:
             peer = peer_id(url)
             matched = REQUIRED_SKILL in skill_ids(card)
             if matched:
-                await announce(task, "working", "发现计算 Agent 具有计算技能")
+                await announce(task, "working", "发现计算智能体具有计算技能")
             else:
                 await record("explainer", peer, "查看广场", {
                     "path": "/.well-known/agent.json",
@@ -168,7 +168,7 @@ async def run_explanation(task: Task, text: str) -> None:
         url, _card = chosen
         peer = peer_id(url)
         await pause()
-        await record("explainer", peer, "tasks/send", {"summary": "A2A 的任务委托：通过 tasks/send 把计算任务交给计算 Agent"})
+        await record("explainer", peer, "tasks/send", {"summary": "A2A 的任务委托：通过 tasks/send 把计算任务交给计算智能体"})
         sent = await send_task(client, url, text)
         remote_id = sent["id"]
         result_text = ""
@@ -181,16 +181,16 @@ async def run_explanation(task: Task, text: str) -> None:
             if remote_state == "completed" and result_text:
                 outcome = plain_outcome(result_text)
                 value = outcome.rsplit("等于 ", 1)[-1] if "等于 " in outcome else outcome
-                summary = f"计算agent回复A2A GET请求：计算完成，结果为{value}"
+                summary = f"计算智能体回复A2A GET请求：计算完成，结果为{value}"
             elif remote_state == "working":
                 if told_still_working:
                     continue
-                summary = "回复A2A请求：正在计算"
+                summary = "回复A2A请求：返回task对象，表示正在计算"
                 told_still_working = True
             elif remote_state == "failed":
                 summary = "计算没有完成"
             else:
-                summary = "回复A2A请求：正在计算"
+                summary = "回复A2A请求：返回task对象，表示正在计算"
             await record("explainer", peer, "tasks/get", {"summary": "A2A GET请求：询问计算进度"})
             await record(peer, "explainer", "tasks/get", {"summary": summary, "state": remote_state})
             if remote_state in ("completed", "failed"):
@@ -199,7 +199,7 @@ async def run_explanation(task: Task, text: str) -> None:
         await client.aclose()
 
     if remote_state == "failed":
-        message = status_message(got) or "计算 Agent 任务失败。"
+        message = status_message(got) or "计算智能体任务失败。"
         await task.fail(message)
         await record("explainer", "client", "failed", {"summary": message})
         return
@@ -208,7 +208,7 @@ async def run_explanation(task: Task, text: str) -> None:
         "explainer",
         "client",
         "TaskArtifactUpdateEvent",
-        {"summary": f"计算 Agent 得到结果：{plain_outcome(result_text)}", "taskId": task.id},
+        {"summary": f"计算智能体得到结果：{plain_outcome(result_text)}", "taskId": task.id},
     )
     await announce(task, "completed", "这轮任务结束", final=True)
 
