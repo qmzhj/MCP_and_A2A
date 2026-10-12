@@ -1,0 +1,21 @@
+INFO:     Started server process [76790]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:44046 - "GET /health HTTP/1.1" 200 OK
+[trace] 2026-10-12T08:48:34.619596+00:00 calculator-tool -> client 计算工具收到：把 3 和 5 相加
+[trace] 2026-10-12T08:48:34.677498+00:00 calculator-tool -> calculator-agent 计算工具答：3 加 5 等于 8
+INFO:     127.0.0.1:34194 - "POST /mcp HTTP/1.1" 200 OK
+[trace] 2026-10-12T08:53:49.387056+00:00 calculator-tool -> client 计算工具收到：把 3 和 5 相加
+[trace] 2026-10-12T08:53:49.415435+00:00 calculator-tool -> calculator-agent 计算工具答：3 加 5 等于 8
+INFO:     127.0.0.1:60242 - "POST /mcp HTTP/1.1" 200 OK
+[trace] 2026-10-12T08:53:49.793911+00:00 calculator-tool -> client 计算工具收到：把 3 和 5 相加
+[trace] 2026-10-12T08:53:49.805758+00:00 calculator-tool -> calculator-agent 计算工具答：3 加 5 等于 8
+INFO:     127.0.0.1:45534 - "POST /mcp HTTP/1.1" 200 OK
+[trace] 2026-10-12T08:54:03.125953+00:00 calculator-tool -> client 计算工具收到：把 3 和 5 相加
+[trace] 2026-10-12T08:54:03.139473+00:00 calculator-tool -> calculator-agent 计算工具答：3 加 5 等于 8
+INFO:     127.0.0.1:39260 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [76790]

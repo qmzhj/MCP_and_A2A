@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>解释 Agent 经“技能广场”委托计算 Agent</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1c1915;
+      --muted: #5c564c;
+      --line: #c8bfb0;
+      --paper: #f6f1e8;
+      --card: #fffdf8;
+      --active: #c45500;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    header {
+      padding: 28px 32px 8px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; font-weight: 650; }
+    header p { margin: 0; color: var(--muted); max-width: 760px; }
+    .stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: 240px minmax(220px, 1fr) 240px;
+      grid-template-rows: auto auto;
+      justify-items: center;
+      align-items: center;
+      column-gap: 36px;
+      row-gap: 72px;
+      margin: 16px 48px 8px;
+    }
+    svg.links {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .link { stroke: var(--line); stroke-width: 2; fill: none; }
+    .link.active { stroke: var(--active); stroke-width: 3; }
+    .node {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 240px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--accent, var(--ink));
+      border-radius: 14px;
+      padding: 12px 12px 10px;
+    }
+    .node.active { border-color: var(--active); box-shadow: 0 0 0 3px rgba(196, 85, 0, 0.16); }
+    #node-plaza { grid-column: 2; grid-row: 1; --accent: #8a6a22; }
+    #node-calculator-tool { grid-column: 3; grid-row: 1; --accent: #8a4b08; }
+    #node-explainer { grid-column: 1; grid-row: 2; --accent: #1f4b6e; }
+    #node-calculator-agent { grid-column: 3; grid-row: 2; --accent: #0f6b4c; }
+    .node h2 { margin: 0; font-size: 18px; }
+    .meta { margin: 4px 0 10px; color: var(--muted); font-size: 13px; }
+    label { display: block; font-size: 13px; margin-bottom: 6px; }
+    textarea {
+      width: 100%;
+      min-height: 48px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      font: inherit;
+      background: #fff;
+    }
+    button {
+      margin-top: 8px;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 14px;
+      background: #1f4b6e;
+      color: white;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.55; cursor: wait; }
+    button.secondary { background: #8a4b08; margin-left: 8px; }
+    #next-hint { min-height: 1.4em; }
+    .status, .result, .pulse { margin: 8px 0 0; font-size: 14px; line-height: 1.45; }
+    .result { font-weight: 650; }
+    .card-list { display: flex; flex-direction: column; gap: 8px; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 13px;
+      background: #fff;
+    }
+    .card strong { display: block; }
+    .hop {
+      position: absolute;
+      z-index: 2;
+      max-width: 280px;
+      transform: translate(-50%, -50%);
+      background: #2b2118;
+      color: white;
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+      pointer-events: none;
+    }
+    .hop .note {
+      display: block;
+      margin-top: 4px;
+      color: #8ec5ff;
+      font-size: 12px;
+    }
+    .annotation {
+      position: absolute;
+      z-index: 2;
+      width: 260px;
+      background: #f4f8ff;
+      color: #1d4e89;
+      border: 1px dashed #7eb0e8;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      pointer-events: none;
+    }
+    .annotation.resident {
+      position: relative;
+      width: auto;
+      max-width: 240px;
+      justify-self: center;
+      align-self: center;
+    }
+    #annotation-plaza { grid-column: 1; grid-row: 1; }
+    section.log { margin: 0 32px 32px; }
+    section.log h2 { font-size: 16px; margin-bottom: 8px; }
+    .log-pane {
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card);
+      padding: 8px 12px 8px 4px;
+    }
+    ol { margin: 0; padding-left: 22px; }
+    li { margin: 4px 0; font-family: ui-monospace, "Cascadia Code", monospace; font-size: 13px; }
+    li .log-note { color: #1d4e89; }
+    @media (max-width: 900px) {
+      .stage { grid-template-columns: 1fr; row-gap: 72px; }
+      #annotation-plaza { grid-column: 1; grid-row: 1; }
+      #node-plaza { grid-column: 1; grid-row: 2; }
+      #node-explainer { grid-column: 1; grid-row: 3; }
+      #node-calculator-tool { grid-column: 1; grid-row: 4; }
+      #node-calculator-agent { grid-column: 1; grid-row: 5; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>解释 Agent 经“技能广场”委托计算 Agent</h1>
+    <p>“技能广场”是每个 Agent 公布技能的约定位置 <code>/.well-known/agent.json</code>。提交后，页面向解释 Agent 发送 <code>tasks/sendSubscribe</code>。每点一次「下一步」，才展示下一条通信。</p>
+  </header>
+  <div class="stage" id="stage">
+    <svg class="links" id="links" aria-hidden="true">
+      <defs>
+        <marker id="arrow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#c45500"></path>
+        </marker>
+      </defs>
+      <line class="link" id="edge-delegate" data-from="explainer" data-to="calculator-agent"></line>
+      <line class="link" id="edge-mcp" data-from="calculator-agent" data-to="calculator-tool"></line>
+      <line class="link" id="edge-plaza-explainer" data-from="explainer" data-to="plaza"></line>
+      <line class="link" id="edge-plaza-calculator" data-from="calculator-agent" data-to="plaza"></line>
+      <line id="edge-annotation" stroke="#7eb0e8" stroke-width="1.5" stroke-dasharray="4 3" visibility="hidden"></line>
+      <line id="edge-annotation-plaza" stroke="#7eb0e8" stroke-width="1.5" stroke-dasharray="4 3"></line>
+    </svg>
+    <article class="node" id="node-explainer" data-id="explainer">
+      <h2>解释 Agent</h2>
+      <p class="meta">8002 · 技能 explain-task</p>
+      <form id="task-form">
+        <label for="task-text">交给解释 Agent 的任务</label>
+        <textarea id="task-text">计算3+5</textarea>
+        <button type="submit" id="send">发送任务</button>
+        <button type="button" class="secondary" id="next" disabled>下一步</button>
+      </form>
+      <p class="meta" id="next-hint"></p>
+      <p class="status" id="explainer-status">空闲</p>
+      <p class="result" id="explainer-result"></p>
+    </article>
+    <aside class="annotation resident" id="annotation-plaza">在 A2A 中，每个 Agent 都会在约定好的 well-known地址（这里是“技能广场”）上公布自己的 Agent Card，卡片里写明它的名字、能力和技能。调用方需要找 Agent时，就去读这张名片，从而发现它、知道它能做什么。</aside>
+    <article class="node" id="node-plaza" data-id="plaza">
+      <h2>“技能广场”</h2>
+      <p class="meta">/.well-known/agent.json</p>
+      <div class="card-list" id="plaza-cards">
+        <div class="card">正在读取已公布的 Agent Card…</div>
+      </div>
+    </article>
+    <article class="node" id="node-calculator-agent" data-id="calculator-agent">
+      <h2>计算 Agent</h2>
+      <p class="meta">8001 · 技能 math-calculator</p>
+      <p class="pulse" id="pulse-calculator-agent">空闲</p>
+    </article>
+    <article class="node" id="node-calculator-tool" data-id="calculator-tool">
+      <h2>计算工具</h2>
+      <p class="meta">8000 · MCP add / multiply / power</p>
+      <p class="pulse" id="pulse-calculator-tool">空闲</p>
+    </article>
+    <div class="hop" id="hop" hidden></div>
+    <div class="hop" id="hop-b" hidden></div>
+    <aside class="annotation" id="annotation" hidden></aside>
+  </div>
+  <section class="log">
+    <h2>通信记录</h2>
+    <div class="log-pane" id="log-pane">
+      <ol id="timeline"></ol>
+    </div>
+  </section>
+  <script>
+    const stage = document.getElementById("stage");
+    const hop = document.getElementById("hop");
+    const hopB = document.getElementById("hop-b");
+    let shownHops = [];
+    const pending = [];
+    let armed = false;
+    const agents = [
+      { id: "explainer", url: "http://127.0.0.1:8002" },
+      { id: "calculator-agent", url: "http://127.0.0.1:8001" }
+    ];
+
+    let hopAnchor = null;
+    let hopText = "";
+    let hopNote = "";
+
+    function nodeRect(id) {
+      const node = document.querySelector(`[data-id="${id}"]`);
+      const stageRect = stage.getBoundingClientRect();
+      const rect = node.getBoundingClientRect();
+      const left = rect.left - stageRect.left;
+      const top = rect.top - stageRect.top;
+      return {
+        left,
+        top,
+        right: left + rect.width,
+        bottom: top + rect.height,
+        width: rect.width,
+        height: rect.height,
+        cx: left + rect.width / 2,
+        cy: top + rect.height / 2
+      };
+    }
+
+    function borderPoint(rect, toward) {
+      const dx = toward.cx - rect.cx;
+      const dy = toward.cy - rect.cy;
+      if (dx === 0 && dy === 0) return { x: rect.cx, y: rect.cy };
+      const scaleX = dx === 0 ? Infinity : (rect.width / 2) / Math.abs(dx);
+      const scaleY = dy === 0 ? Infinity : (rect.height / 2) / Math.abs(dy);
+      const scale = Math.min(scaleX, scaleY);
+      return { x: rect.cx + dx * scale, y: rect.cy + dy * scale };
+    }
+
+    function callerToCallee(source, target) {
+      const calls = [
+        ["explainer", "calculator-agent"],
+        ["calculator-agent", "calculator-tool"],
+        ["explainer", "plaza"]
+      ];
+      const match = calls.find(([from, to]) =>
+        (source === from && target === to) || (source === to && target === from)
+      );
+      return match || [source, target];
+    }
+
+    function drawLinks() {
+      document.querySelectorAll(".link").forEach((line) => {
+        const directed = line.classList.contains("active") && line.dataset.arrowFrom && line.dataset.arrowTo;
+        const from = nodeRect(directed ? line.dataset.arrowFrom : line.dataset.from);
+        const to = nodeRect(directed ? line.dataset.arrowTo : line.dataset.to);
+        const start = borderPoint(from, to);
+        let end = borderPoint(to, from);
+        const label = { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 };
+        if (directed) {
+          const dx = end.x - start.x;
+          const dy = end.y - start.y;
+          const length = Math.hypot(dx, dy) || 1;
+          end = { x: end.x - (dx / length) * 11, y: end.y - (dy / length) * 11 };
+          line.setAttribute("marker-end", "url(#arrow-head)");
+        } else {
+          line.removeAttribute("marker-end");
+        }
+        line.setAttribute("x1", start.x);
+        line.setAttribute("y1", start.y);
+        line.setAttribute("x2", end.x);
+        line.setAttribute("y2", end.y);
+        const span = Math.hypot(end.x - start.x, end.y - start.y);
+        line.dataset.labelX = label.x;
+        line.dataset.labelY = label.y;
+        line.dataset.labelW = Math.max(168, Math.min(460, span - 28));
+      });
+      if (shownHops.length) {
+        shownHops.forEach((item) => placeEdgeHop(item.el, item.edge, item.text));
+      } else if (!hop.hidden) {
+        placeHop(hopText);
+      }
+      placeAnnotation();
+      placePlazaAnnotation();
+    }
+
+    function summaryOf(event) {
+      return (event.detail && event.detail.summary) || event.action;
+    }
+
+    function edgeElement(from, to) {
+      return document.querySelector(`.link[data-from="${from}"][data-to="${to}"]`)
+        || document.querySelector(`.link[data-from="${to}"][data-to="${from}"]`);
+    }
+
+    function noteOf(event) {
+      return (event.detail && event.detail.note) || "";
+    }
+
+    function hideHop(el) {
+      el.hidden = true;
+      el.replaceChildren();
+    }
+
+    function placeEdgeHop(el, edge, text) {
+      el.hidden = false;
+      el.replaceChildren(document.createTextNode(text));
+      el.style.left = `${edge.dataset.labelX}px`;
+      el.style.top = `${edge.dataset.labelY}px`;
+      el.style.transform = "translate(-50%, -50%)";
+      el.style.maxWidth = `${edge.dataset.labelW || 280}px`;
+    }
+
+    function placeHop(text, note) {
+      if (note !== undefined) hopNote = note || "";
+      if (!hopAnchor || !text) {
+        hop.hidden = true;
+        hopText = "";
+        hopNote = "";
+        hop.replaceChildren();
+        return;
+      }
+      hopText = text;
+      hop.hidden = false;
+      hop.replaceChildren(document.createTextNode(text));
+      if (hopAnchor.kind === "node") {
+        const box = nodeRect(hopAnchor.id);
+        hop.style.left = `${box.cx}px`;
+        hop.style.top = `${box.top - 8}px`;
+        hop.style.transform = "translate(-50%, -100%)";
+        hop.style.maxWidth = "220px";
+        return;
+      }
+      const edge = hopAnchor.edge;
+      hop.style.left = `${edge.dataset.labelX}px`;
+      hop.style.top = `${edge.dataset.labelY}px`;
+      hop.style.transform = "translate(-50%, -50%)";
+      hop.style.maxWidth = `${edge.dataset.labelW || 280}px`;
+    }
+
+    function activate(ids, edgePairs, text, note) {
+      shownHops = [];
+      hideHop(hopB);
+      document.querySelectorAll(".node, .link").forEach((element) => {
+        element.classList.remove("active");
+        delete element.dataset.arrowFrom;
+        delete element.dataset.arrowTo;
+      });
+      ids.forEach((id) => {
+        const node = document.querySelector(`[data-id="${id}"]`);
+        if (node) node.classList.add("active");
+      });
+      hopAnchor = null;
+      edgePairs.forEach(([from, to]) => {
+        const line = edgeElement(from, to);
+        if (!line) return;
+        line.classList.add("active");
+        line.dataset.arrowFrom = from;
+        line.dataset.arrowTo = to;
+        hopAnchor = hopAnchor || { kind: "edge", edge: line };
+      });
+      if (!hopAnchor || !text) {
+        hideHop(hop);
+        return;
+      }
+      placeHop(text, note || "");
+    }
+
+    function showAgentNote(note) {
+      const box = document.getElementById("annotation");
+      box.hidden = !note;
+      box.textContent = note || "";
+    }
+
+    function placeAnnotation() {
+      const box = document.getElementById("annotation");
+      const line = document.getElementById("edge-annotation");
+      if (box.hidden) {
+        line.setAttribute("visibility", "hidden");
+        return;
+      }
+      const agent = nodeRect("calculator-agent");
+      const width = 260;
+      const gap = 28;
+      const left = Math.max(8, agent.left - width - gap);
+      box.style.width = `${width}px`;
+      box.style.left = `${left}px`;
+      box.style.top = `${agent.top}px`;
+      line.setAttribute("x1", left + box.offsetWidth);
+      line.setAttribute("y1", agent.top + box.offsetHeight / 2);
+      line.setAttribute("x2", agent.left);
+      line.setAttribute("y2", agent.cy);
+      line.setAttribute("visibility", "visible");
+    }
+
+    function placePlazaAnnotation() {
+      const box = document.getElementById("annotation-plaza");
+      const line = document.getElementById("edge-annotation-plaza");
+      const plaza = nodeRect("plaza");
+      const stageRect = stage.getBoundingClientRect();
+      const rect = box.getBoundingClientRect();
+      const right = rect.right - stageRect.left;
+      const midY = rect.top - stageRect.top + rect.height / 2;
+      line.setAttribute("x1", right);
+      line.setAttribute("y1", midY);
+      line.setAttribute("x2", plaza.left);
+      line.setAttribute("y2", plaza.cy);
+    }
+
+    function isMcpSend(event) {
+      return summaryOf(event).startsWith("向计算工具发送MCP请求");
+    }
+
+    function isViewProgress(event) {
+      return summaryOf(event) === "回复A2A请求：正在计算";
+    }
+
+    function pairedPartner(event) {
+      const match = isMcpSend(event) ? isViewProgress : isViewProgress(event) ? isMcpSend : null;
+      if (!match) return null;
+      return pending.find((item) => item !== event && match(item)) || null;
+    }
+
+    function logEvent(event) {
+      const text = summaryOf(event);
+      const note = noteOf(event);
+      const item = document.createElement("li");
+      item.append(document.createTextNode(`${event.source} → ${event.target}  ${text}`));
+      if (note) {
+        const extra = document.createElement("span");
+        extra.className = "log-note";
+        extra.textContent = `  ${note}`;
+        item.append(extra);
+      }
+      const logPane = document.getElementById("log-pane");
+      const followLatest = logPane.scrollHeight - logPane.scrollTop - logPane.clientHeight < 32;
+      document.getElementById("timeline").append(item);
+      if (followLatest) logPane.scrollTop = logPane.scrollHeight;
+
+      updateBoxStatus(event);
+      showAgentNote(note);
+      return { text, note };
+    }
+
+    function setBoxStatus(id, busy) {
+      document.getElementById(id).textContent = busy ? "正在执行任务" : "空闲";
+    }
+
+    function updateBoxStatus(event) {
+      const text = summaryOf(event);
+      if (event.source === "explainer" && event.target === "client" && event.action !== "TaskArtifactUpdateEvent") {
+        setBoxStatus("explainer-status", text !== "这轮任务结束" && event.action !== "failed");
+      }
+      if (event.action === "tasks/send" && event.target === "calculator-agent") {
+        setBoxStatus("pulse-calculator-agent", true);
+      }
+      if (event.source === "calculator-agent" && event.target === "client" && event.action !== "TaskArtifactUpdateEvent") {
+        setBoxStatus("pulse-calculator-agent", text !== "这轮任务结束" && event.action !== "failed");
+      }
+      if ((event.action === "tools/call" && event.target === "calculator-tool") || (event.source === "calculator-tool" && event.target === "client")) {
+        setBoxStatus("pulse-calculator-tool", true);
+      }
+      if (event.source === "calculator-tool" && event.target === "calculator-agent") {
+        setBoxStatus("pulse-calculator-tool", false);
+      }
+    }
+
+    function applyPair(first, second) {
+      const logged = [first, second].map(logEvent);
+      document.querySelectorAll(".node, .link").forEach((element) => {
+        element.classList.remove("active");
+        delete element.dataset.arrowFrom;
+        delete element.dataset.arrowTo;
+      });
+      hopAnchor = null;
+      hideHop(hop);
+      hideHop(hopB);
+      shownHops = [];
+      [first, second].forEach((event, index) => {
+        const line = edgeElement(event.source, event.target);
+        if (!line) return;
+        [event.source, event.target].forEach((id) => {
+          const node = document.querySelector(`[data-id="${id}"]`);
+          if (node) node.classList.add("active");
+        });
+        line.classList.add("active");
+        line.dataset.arrowFrom = event.source;
+        line.dataset.arrowTo = event.target;
+        shownHops.push({
+          el: index === 0 ? hop : hopB,
+          edge: line,
+          text: logged[index].text,
+          note: logged[index].note
+        });
+      });
+      showAgentNote(logged.map((item) => item.note).find(Boolean) || "");
+      drawLinks();
+    }
+
+    function applyEvent(event) {
+      const { text, note } = logEvent(event);
+
+      if (event.source === "explainer" && event.target === "client" && event.action === "TaskArtifactUpdateEvent") {
+        document.getElementById("explainer-result").textContent = text;
+      }
+
+      if (event.action === "查看广场") {
+        activate(["explainer", "plaza"], [["explainer", "plaza"]], text, note);
+      } else if (event.source === "client" || event.target === "client") {
+        const id = event.source === "client" ? event.target : event.source;
+        activate([id], [], "");
+        hopAnchor = { kind: "node", id };
+        placeHop(text, note);
+      } else if (event.action === "tasks/get" || event.action === "tasks/send" || event.action === "tools/call") {
+        activate([event.source, event.target], [[event.source, event.target]], text, note);
+      } else {
+        const [from, to] = callerToCallee(event.source, event.target);
+        activate([event.source, event.target], [[from, to]], text, note);
+      }
+      drawLinks();
+    }
+
+    async function loadPlaza() {
+      const host = document.getElementById("plaza-cards");
+      host.replaceChildren();
+      for (const agent of agents) {
+        const card = document.createElement("div");
+        card.className = "card";
+        try {
+          const body = await (await fetch(`${agent.url}/.well-known/agent.json`)).json();
+          const labels = {
+            explainer: { name: "解释agent", skill: "理解任务" },
+            "calculator-agent": { name: "计算agent", skill: "计算" }
+          };
+          const label = labels[agent.id] || { name: body.name, skill: (body.skills || []).map((skill) => skill.id).join(", ") || "无" };
+          card.innerHTML = `<strong>${label.name}</strong><br>技能：${label.skill}`;
+        } catch (_error) {
+          card.textContent = `${agent.url} 尚未公布 Agent Card`;
+        }
+        host.append(card);
+      }
+      drawLinks();
+    }
+
+    function isExplainerReceipt(event) {
+      return event.source === "explainer"
+        && event.target === "client"
+        && summaryOf(event).startsWith("解释 Agent 收到题目");
+    }
+
+    function skipQueuedEvent(event) {
+      const handedToExplainer = event.source === "client"
+        && event.target === "explainer"
+        && (event.action === "tasks/send" || event.action === "tasks/sendSubscribe");
+      return handedToExplainer || isExplainerReceipt(event);
+    }
+
+    function updateStepButton() {
+      const button = document.getElementById("next");
+      const hint = document.getElementById("next-hint");
+      button.disabled = pending.length === 0;
+      button.textContent = pending.length ? `下一步（${pending.length}）` : "下一步";
+      if (pending.length) {
+        hint.textContent = "";
+      } else if (armed) {
+        hint.textContent = "本轮通信已演示完";
+      } else {
+        hint.textContent = "";
+      }
+    }
+
+    function resetDemo() {
+      pending.length = 0;
+      document.getElementById("timeline").replaceChildren();
+      document.getElementById("explainer-result").textContent = "";
+      document.getElementById("explainer-status").textContent = "空闲";
+      document.getElementById("pulse-calculator-agent").textContent = "空闲";
+      document.getElementById("annotation").hidden = true;
+      document.getElementById("annotation").textContent = "";
+      document.getElementById("pulse-calculator-tool").textContent = "空闲";
+      document.querySelectorAll(".node, .link").forEach((element) => {
+        element.classList.remove("active");
+        delete element.dataset.arrowFrom;
+        delete element.dataset.arrowTo;
+      });
+      shownHops = [];
+      hideHop(hop);
+      hideHop(hopB);
+      drawLinks();
+      updateStepButton();
+    }
+
+    async function readStream(response) {
+      const reader = response.body.getReader();
+      while (true) {
+        const chunk = await reader.read();
+        if (chunk.done) break;
+      }
+    }
+
+    document.getElementById("next").addEventListener("click", () => {
+      if (!pending.length) return;
+      const partner = pairedPartner(pending[0]);
+      if (partner) {
+        const first = pending.shift();
+        pending.splice(pending.indexOf(partner), 1);
+        applyPair(first, partner);
+      } else {
+        applyEvent(pending.shift());
+      }
+      updateStepButton();
+    });
+
+    document.getElementById("task-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = document.getElementById("send");
+      const text = document.getElementById("task-text").value.trim();
+      armed = true;
+      resetDemo();
+      const receipt = `解释 Agent 收到题目：${text}`;
+      applyEvent({
+        source: "explainer",
+        target: "client",
+        action: "submitted",
+        detail: { summary: receipt }
+      });
+      document.getElementById("next-hint").textContent = "下一条通信到达后即可点击";
+      button.disabled = true;
+      try {
+        const response = await fetch("http://127.0.0.1:8002/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: crypto.randomUUID(),
+            method: "tasks/sendSubscribe",
+            params: {
+              id: crypto.randomUUID(),
+              message: { role: "user", parts: [{ type: "text", text }] }
+            }
+          })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        await readStream(response);
+        updateStepButton();
+      } catch (error) {
+        document.getElementById("explainer-status").textContent = "空闲";
+        hop.hidden = true;
+      } finally {
+        button.disabled = false;
+        drawLinks();
+      }
+    });
+
+    new EventSource("/stream").onmessage = (event) => {
+      if (!armed) return;
+      const body = JSON.parse(event.data);
+      if (skipQueuedEvent(body)) return;
+      pending.push(body);
+      updateStepButton();
+    };
+    window.addEventListener("resize", drawLinks);
+    loadPlaza();
+    drawLinks();
+  </script>
+</body>
+</html>
